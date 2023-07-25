@@ -1,0 +1,343 @@
+<input type="hidden" id="type" value="<?php echo $md['type']; ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./dist/css/main.css">
+<script src="./dist/js/main.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'UA-105867635-2');
+</script>
+</head>
+
+<!-- ======================================================= -->
+
+<body>
+  <!-- SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="is-hidden">
+    <symbol id="copy" viewBox="0 0 24 24">
+      <path fill="currentColor"
+        d="M15,20H5V7c0-0.55-0.45-1-1-1h0C3.45,6,3,6.45,3,7v13c0,1.1,0.9,2,2,2h10c0.55,0,1-0.45,1-1v0C16,20.45,15.55,20,15,20z M20,16V4c0-1.1-0.9-2-2-2H9C7.9,2,7,2.9,7,4v12c0,1.1,0.9,2,2,2h9C19.1,18,20,17.1,20,16z M18,16H9V4h9V16z" />
+    </symbol>
+    <symbol id="reload-icn" viewBox="0 0 24 24">
+      <path
+        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+    </symbol>
+  </svg>
+  <section class="section m-0 p-0">
+    <h1 class="is-size-1 has-text-weight-bold has-text-centered mb-2">JWT Decoder, Verifier, Generator, Decryptor
+    </h1>
+    <div class='columns'>
+      <div class='column is-5 has-text-left' id='panel_encoded'>
+        <div class="box">
+          <div class="columns">
+            <div class="column is-flex is-align-items-center">
+              <p class="is-inline-block is-size-4"><b>Encoded Token</b> <span class='length'></span></p>
+            </div>
+            <div class="column">
+              <div class="has-text-right">
+                <button type="button" class="button  is-link is-light btn-copy" data-target="encodedjwt"
+                  title='copy to clipboard'>
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <h2 class="has-text-weight-bold">Insert your JWT here to decode :</h2>
+          <textarea id='encodedjwt' class='mt-5 textarea p-3'></textarea>
+        </div>
+      </div>
+
+
+      <div class="column is-2 pb-5">
+        <div class="box">
+          <div class="is-flex center is-align-items-center is-justify-content-center">
+            <div class="select mt-3">
+              <select class="sel-variant" id='sel-variant'>
+                <option value='Signed'>Signed</option>
+                <option value='Encrypted'>Encrypted</option>
+              </select>
+            </div>
+          </div>
+          <div class="is-flex is-align-items-center is-justify-content-center mt-2">
+            <div class="select">
+              <select class="sel-alg" title='alg' id='sel-alg'>
+              </select>
+            </div>
+          </div>
+          <div class="is-flex is-justify-content-center is-align-items-center mt-2">
+            <div class="select">
+              <select class="sel-enc" title='enc' id='sel-enc'>
+              </select>
+            </div>
+          </div>
+          <div class="is-flex is-justify-content-center">
+            <button type="button" class="mt-3 button is-medium  is-primary btn-encode" title='encode and sign a JWT'>
+              Encode <span class="ml-2 oi oi-arrow-thick-left"></span>
+            </button>
+          </div>
+          <div class="is-flex is-justify-content-center">
+            <button type="button" class="mt-3 is-primary is-medium button btn-decode" title='decode a JWT'>
+              Decode <span class="ml-2 oi oi-arrow-thick-right"></span>
+            </button>
+          </div>
+          <div class="is-flex is-justify-content-center is-align-items-center">
+            <button type="button" class="mt-3 is-medium button is-success mx-2 btn-verify"
+              title='verify the encoded JWT with the given public key'>
+              Verify <span class="oi oi-check ml-2"></span>
+            </button>
+          </div>
+          <div title='these apply only when generating JWT' class="my-4 mx-4 is-size-5 has-text-centered">
+            Overrides</div>
+          <div class="is-flex is-justify-content-center is-align-items-center">
+            <div class="mb-3">
+              <span class="is-size-5 pb-5 has-text-weight-semibold">exp:</span>
+              <div class="select">
+                <select class="sel-expiry" id='sel-expiry'
+                  title='override expiry; used only when encoding and signing.'>
+                  <option value='do nothing'>Do nothing</option>
+                  <option value='no expiry'>No expiry</option>
+                  <option value='10 seconds'>10 seconds</option>
+                  <option value='60 seconds'>60 seconds</option>
+                  <option value='5 minutes'>5 minutes</option>
+                  <option value='10 minutes'>10 minutes</option>
+                  <option value='30 minutes'>30 minutes</option>
+                  <option value='60 minutes'>60 minutes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="columns mb-5">
+            <div class="column mx-4">
+              <span class=" pb-5">iat:</span>
+              <input id='chk-iat' class="checkbox" type='checkbox' />
+            </div>
+            <div class="column mx-4">
+              <span class="pb-5">typ:</span>
+              <input id='chk-typ' class="checkbox" type='checkbox' />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class='column is-5 clearfix has-text-left' id='panel_decoded' style="overflow-y: scroll; height: 90vh;">
+        <div class="card">
+          <div id='header'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="has-text-weight-semibold is-size-4 ml-3">Decoded Header <span class='length'></span></p>
+              </div>
+              <div class="column has-text-right mx-2 mt-2">
+                <button type="button" title="copy to clipboard" class="mb-3 button is-link is-light btn-copy"
+                  data-target="token-decoded-header" title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="button is-link is-info btn-newheader" title='generate a new header'>
+                  <span class="icon is-small">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                      <path
+                        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <textarea rows=12 cols=34 id='token-decoded-header' class='jwt-header textarea'></textarea>
+          </div>
+          <hr>
+          <div id='payload'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="is-size-4 has-text-weight-semibold ml-3">Decoded Payload <span class='length'></span>
+                </p>
+              </div>
+              <div class="column has-text-right mx-2 mt-2">
+                <button type="button" title="copy to clipboard" class="mb-3 button is-link is-light  btn-copy"
+                  data-target="token-decoded-payload" title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="button is-info btn-md btn-newpayload" title='generate a new payload'>
+                  <span class="icon is-small">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                      <path
+                        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <textarea rows=12 cols=34 id='token-decoded-payload' class='jwt-payload'></textarea>
+          </div>
+          <hr>
+          <div id='privatekey' title='paste in your private key, it does not leave your browser'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="is-size-4 has-text-weight-semibold ml-3">Private Key</p>
+              </div>
+              <div class="column has-text-right mx-2 mt-2">
+                <button type="button" class="button is-link is-light btn-copy" data-target="ta_privatekey"
+                  title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="button is-secondary is-info btn-md btn-newkey" data-target="dummy"
+                  title='generate a new keypair'>
+                  <span class="icon is-small">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                      <path
+                        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <textarea rows=12 cols=34 id='ta_privatekey'></textarea>
+          </div>
+          <hr>
+          <div id='publickey'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="is-size-4 has-text-weight-semibold ml-3"><span id='publickey-label'>Public Key (PEM or
+                    JWKS)</span>
+                </p>
+              </div>
+              <div class="column mx-2 mt-2 is-flex is-justify-content-end">
+                <button type="button" title="copy to clipboard" class="button is-link is-light btn-copy"
+                  data-target="ta_publickey" title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <textarea rows=12 cols=34 id='ta_publickey'></textarea>
+          </div>
+          <hr>
+          <div id='directkey'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="is-size-4 has-text-weight-semibold">Direct Key <span class='length'></span></p>
+              </div>
+              <div class="column">
+                <button type="button" title="copy to clipboard" class="buttton is-link is-light btn-copy"
+                  data-target="ta_directkey" title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="button is-info btn-newkey" data-target="dummy"
+                  title='generate a new random key'>
+                  <span class="icon is-small">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                      <path
+                        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <input type='text' id='ta_directkey' class='ta-key' data-coding='sel-dirkey-coding'
+              value='Key-Must-Be-16-or-32-or-64-bytes-exactly' spellcheck="false">
+            <div>
+              <span>Key Encoding:</span>
+              <select id='sel-dirkey-coding' data-target='ta_directkey'
+                class="form-control form-control-sm sel-key-coding">
+                <option value='UTF-8'>UTF-8</option>
+                <option value='Hex'>Hex</option>
+                <option value='Base64'>Base64</option>
+              </select>
+            </div>
+          </div>
+          <div id='symmetrickey'>
+            <div class="columns">
+              <div class="column is-flex is-align-items-center">
+                <p class="is-size-4 has-text-weight-semibold ml-3">Symmetric Key <span class='length'></span></p>
+              </div>
+              <div class="column mx-2">
+                <button type="button" title="copy to clipboard" class="mt-2 button is-link is-light btn-copy"
+                  data-target="ta_symmetrickey" title="copy to clipboard">
+                  <span class="icon is-small">
+                    <svg class="svgicon">
+                      <use xlink:href="#copy"></use>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="mt-2 button is-info btn-newkey" data-target="dummy"
+                  title='generate a new random key'>
+                  <span class="icon is-small">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                      <path
+                        d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <input type='text' id='ta_symmetrickey' class='ta-key input' data-coding='sel-symkey-coding'
+              value='Key-Must-Be-at-least-32-bytes-in-length!' spellcheck="false">
+            <div>
+              <span>Key Encoding:</span>
+              <div class="select">
+                <select id='sel-symkey-coding' data-target='ta_symmetrickey' class="select sel-key-coding">
+                  <option value='UTF-8'>UTF-8</option>
+                  <option value='Hex'>Hex</option>
+                  <option value='Base64'>Base64</option>
+                  <option value='PBKDF2'>PBKDF2</option>
+                </select>
+              </div>
+            </div>
+            <div id='pbkdf2_params'>
+              <div>
+                <span>iterations:</span>
+                <input type='number' id='ta_pbkdf2_iterations' class="input" value='10000'>
+              </div>
+              <div>
+                <span>salt:</span>
+                <input type='text' id='ta_pbkdf2_salt' class="input" data-coding='sel-symkey-pbkdf2-salt-coding'
+                  value='abcdefghijkl'>
+              </div>
+              <div>
+                <span>salt encoding:</span>
+                <div class="select">
+                  <select id='sel-symkey-pbkdf2-salt-coding' data-target='ta_pbkdf2_salt'
+                    class="select sel-symkey-pbkdf2-salt-coding sel-key-coding">
+                    <option value='UTF-8'>UTF-8</option>
+                    <option value='Hex'>Hex</option>
+                    <option value='Base64'>Base64</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
